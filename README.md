@@ -189,3 +189,78 @@ Kriteria Penilaian
 
 * 
 **Bonus:** Integrasi AI chatbot yang dapat menjawab pertanyaan terkait data aplikasi .
+
+---
+
+## Cara Menjalankan Proyek
+
+### Prasyarat
+- Node.js 18+ & npm
+- Python 3.10+
+- PostgreSQL berjalan (default: `postgres:postgres@localhost:5432/task_db`)
+
+### Backend (FastAPI)
+1. Pindah ke folder backend dan buat virtualenv (opsional):
+   - `cd backend`
+   - `python -m venv .venv && .\\.venv\\Scripts\\activate` (Windows)
+2. Instal dependensi: `pip install -r requirements.txt`
+3. Salin `.env.example` menjadi `.env` dan isi nilai:
+   - `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/task_db`
+   - `JWT_SECRET` isi nilai rahasia
+   - `DEEPSEEK_API_KEY` isi API key
+4. Jalankan migrasi sederhana (create_all) otomatis saat start; seed demo user (opsional):
+   - `python seed.py`
+5. Start server: `uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`
+
+### Frontend (Next.js)
+1. `cd frontend`
+2. `npm install`
+3. Salin `.env.example` menjadi `.env.local` dan sesuaikan `NEXT_PUBLIC_API_BASE=http://localhost:8000`
+4. Jalankan: `npm run dev` (default http://localhost:3000)
+
+### Login Demo
+- Email: `admin@example.com`
+- Password: `admin123`
+
+---
+
+## Struktur Utama
+- `backend/` FastAPI + SQLAlchemy + JWT + DeepSeek chatbot
+- `frontend/` Next.js app router, CRUD UI, chatbot panel
+- `docs/postman_collection.json` Postman collection
+- `docs/erd.md` Mermaid ERD (export ke PNG/PDF sesuai kebutuhan)
+
+---
+
+## DeepSeek Chatbot
+- Endpoint: `POST /chat/query` dengan payload `{ "question": "..." }`
+- Konfigurasi:
+  - `DEEPSEEK_API_KEY` dan opsional `DEEPSEEK_API_URL`
+  - Model yang digunakan: `deepseek-chat`
+- Mekanisme: backend mengambil task terkait (opsional filter status), membangun prompt ringkas, memanggil DeepSeek API, lalu mengembalikan jawaban teks.
+
+---
+
+## Troubleshooting
+
+### Error saat Login/Register (bcrypt)
+**Masalah:** Jika muncul error seperti `AttributeError: module 'bcrypt' has no attribute '__about__'` atau error terkait hashing password.
+
+**Penyebab:** Versi `bcrypt==4.0.1` tidak kompatibel dengan `passlib==1.7.4`. API bcrypt berubah di versi 4.x yang menyebabkan passlib tidak dapat menggunakan bcrypt dengan benar.
+
+**Solusi:** Gunakan `bcrypt==3.2.2` di `requirements.txt`:
+```
+passlib[bcrypt]==1.7.4
+bcrypt==3.2.2
+```
+Lalu install ulang: `pip install -r requirements.txt`
+
+---
+
+## Catatan API
+- Auth: `POST /auth/login` (form username=email, password)
+- Task CRUD: `/tasks` (GET/POST), `/tasks/{id}` (GET/PUT/DELETE)
+- Users: `/users` (GET, POST)
+- Chatbot: `/chat/query`
+
+Import Postman collection: `docs/postman_collection.json`, set `baseUrl` dan `token` (Bearer).
