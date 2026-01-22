@@ -209,9 +209,39 @@ export default function TaskForm({ onSubmit, onCancel, initial = {} }) {
           border-top: 1px solid var(--gray-100);
         }
 
+        @media (max-width: 768px) {
+          .form-body {
+            padding: 20px;
+            gap: 16px;
+          }
+
+          .form-footer {
+            padding: 14px 20px;
+          }
+        }
+
         @media (max-width: 480px) {
+          .form-body {
+            padding: 16px;
+            gap: 14px;
+          }
+
           .form-row {
             grid-template-columns: 1fr;
+          }
+
+          .label {
+            font-size: 12px;
+          }
+
+          .form-footer {
+            padding: 12px 16px;
+            flex-direction: column-reverse;
+          }
+
+          .form-footer .btn {
+            width: 100%;
+            justify-content: center;
           }
         }
       `}</style>

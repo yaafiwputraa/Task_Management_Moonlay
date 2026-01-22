@@ -525,18 +525,138 @@ export default function HomePage() {
           }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+          .app-container {
+            padding: 12px;
+          }
+
+          .app-header {
+            padding: 16px;
+            border-radius: 12px;
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+          }
+
+          .header-left {
+            flex-direction: column;
+            gap: 12px;
+          }
+
+          .app-header h1 {
+            font-size: 18px;
+          }
+
           .stats-container {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+          }
+
+          .stat-card {
+            padding: 16px;
+            gap: 12px;
+          }
+
+          .stat-icon {
+            width: 40px;
+            height: 40px;
+          }
+
+          .stat-number {
+            font-size: 20px;
           }
 
           .section-header {
             flex-direction: column;
             align-items: stretch;
+            gap: 12px;
           }
 
           .filter-tabs {
             overflow-x: auto;
+            width: 100%;
+            justify-content: flex-start;
+            padding: 4px;
+          }
+
+          .filter-tab {
+            padding: 8px 12px;
+            font-size: 12px;
+            white-space: nowrap;
+          }
+
+          .btn-primary {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .modal {
+            margin: 10px;
+            max-height: 85vh;
+          }
+
+          .modal-header {
+            padding: 16px;
+          }
+
+          .modal-header h2 {
+            font-size: 16px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .app-container {
+            padding: 8px;
+          }
+
+          .stats-container {
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+          }
+
+          .stat-card {
+            padding: 12px;
+            flex-direction: column;
+            text-align: center;
+            gap: 8px;
+          }
+
+          .stat-icon {
+            width: 36px;
+            height: 36px;
+          }
+
+          .stat-number {
+            font-size: 18px;
+          }
+
+          .stat-label {
+            font-size: 11px;
+          }
+
+          .logo {
+            width: 40px;
+            height: 40px;
+          }
+
+          .logo svg {
+            width: 22px;
+            height: 22px;
+          }
+
+          .filter-tabs {
+            gap: 4px;
+          }
+
+          .filter-tab {
+            padding: 6px 10px;
+            font-size: 11px;
+          }
+
+          .tab-count {
+            padding: 1px 6px;
+            font-size: 10px;
           }
         }
       `}</style>

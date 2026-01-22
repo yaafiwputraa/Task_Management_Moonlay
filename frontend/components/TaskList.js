@@ -259,6 +259,86 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
           color: var(--danger);
           font-weight: 500;
         }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+          .task-card {
+            padding: 16px;
+          }
+
+          .task-actions {
+            opacity: 1;
+          }
+
+          .task-title {
+            font-size: 15px;
+          }
+
+          .task-description {
+            font-size: 13px;
+            -webkit-line-clamp: 3;
+          }
+
+          .task-meta {
+            flex-direction: column;
+            gap: 8px;
+          }
+
+          .meta-item {
+            font-size: 12px;
+          }
+
+          .empty-state {
+            padding: 40px 20px;
+          }
+
+          .empty-state svg {
+            width: 48px;
+            height: 48px;
+          }
+
+          .empty-state h3 {
+            font-size: 16px;
+          }
+
+          .empty-state p {
+            font-size: 13px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .task-card {
+            padding: 14px;
+          }
+
+          .badge {
+            padding: 3px 10px;
+            font-size: 11px;
+          }
+
+          .action-btn {
+            width: 28px;
+            height: 28px;
+          }
+
+          .action-btn svg {
+            width: 14px;
+            height: 14px;
+          }
+
+          .task-title {
+            font-size: 14px;
+          }
+
+          .task-description {
+            font-size: 12px;
+            margin-bottom: 12px;
+          }
+
+          .task-meta {
+            padding-top: 12px;
+          }
+        }
       `}</style>
     </div>
   );

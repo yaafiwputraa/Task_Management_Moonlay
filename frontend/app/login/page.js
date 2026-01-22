@@ -200,6 +200,61 @@ export default function LoginPage() {
           color: #94a3b8;
           text-align: center;
         }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+          .login-container {
+            padding: 16px;
+          }
+
+          .login-card {
+            border-radius: 12px;
+          }
+
+          .login-header {
+            padding: 30px 24px 24px;
+          }
+
+          .login-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+          }
+
+          .login-icon svg {
+            width: 28px;
+            height: 28px;
+          }
+
+          .login-header h1 {
+            font-size: 20px;
+          }
+
+          .login-header p {
+            font-size: 13px;
+          }
+
+          .login-form {
+            padding: 24px;
+          }
+
+          .form-group {
+            margin-bottom: 16px;
+          }
+
+          .login-btn {
+            padding: 12px 16px;
+            font-size: 15px;
+          }
+
+          .login-footer {
+            padding: 16px 24px;
+          }
+
+          .login-footer p {
+            font-size: 11px;
+          }
+        }
       `}</style>
     </div>
   );
