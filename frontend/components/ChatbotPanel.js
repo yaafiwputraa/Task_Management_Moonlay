@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import api from "../lib/api";
 
 export default function ChatbotPanel() {
@@ -95,7 +96,21 @@ export default function ChatbotPanel() {
               </div>
             )}
             <div className="message-content">
-              {msg.text}
+              {msg.type === "bot" ? (
+                <ReactMarkdown
+                  components={{
+                    p: ({node, ...props}) => <p style={{margin: 0, marginBottom: '8px'}} {...props} />,
+                    strong: ({node, ...props}) => <strong style={{fontWeight: 600, color: 'inherit'}} {...props} />,
+                    ul: ({node, ...props}) => <ul style={{margin: '8px 0', paddingLeft: '20px'}} {...props} />,
+                    ol: ({node, ...props}) => <ol style={{margin: '8px 0', paddingLeft: '20px'}} {...props} />,
+                    li: ({node, ...props}) => <li style={{marginBottom: '4px'}} {...props} />,
+                  }}
+                >
+                  {msg.text}
+                </ReactMarkdown>
+              ) : (
+                msg.text
+              )}
             </div>
           </div>
         ))}
@@ -282,6 +297,27 @@ export default function ChatbotPanel() {
           background: var(--gray-100);
           color: var(--gray-800);
           border-bottom-left-radius: 4px;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+
+        .message.bot .message-content strong {
+          font-weight: 600;
+          color: var(--gray-900);
+        }
+
+        .message.bot .message-content ul,
+        .message.bot .message-content ol {
+          margin: 8px 0;
+          padding-left: 20px;
+        }
+
+        .message.bot .message-content li {
+          margin-bottom: 4px;
+        }
+
+        .message.bot .message-content p:last-child {
+          margin-bottom: 0;
         }
 
         .typing {
