@@ -239,35 +239,12 @@ Lihat file **`docs/erd.md`** atau diagram berikut:
 **Relasi:**
 - One-to-Many: `users` ← `tasks` (via `assignee_id`)
 
-## 🎨 UI/UX Highlights
-
-- **Modern Clean Design**: Flat design tanpa gradien berlebihan
-- **Kanban Board Layout**: Tiga kolom (Todo, In Progress, Done) seperti Jira
-- **Responsive**: Mobile-friendly dengan breakpoint adaptif
-- **Floating Chatbot**: Tidak mengganggu layout utama
-- **Glassmorphism Header**: Sticky header dengan blur effect
-- **Micro-interactions**: Hover effects, animations, loading states
-
 ## 📝 Catatan Teknis
 
 - **JWT Token Expiry**: 60 menit (configurable di `.env`)
 - **CORS**: Frontend default `http://localhost:3000` (edit di `backend/app/main.py`)
 - **Database Migration**: Gunakan `alembic` jika perlu (saat ini auto-create via SQLAlchemy)
 - **Seeder**: `backend/seed.py` membuat 3 user dummy dan beberapa sample tasks
-
-## 🧪 Testing
-
-**Backend:**
-```bash
-cd backend
-python test_jwt.py  # Test JWT generation
-```
-
-**Frontend:**
-```bash
-cd frontend
-npm run build  # Test production build
-```
 
 ## 📦 Deliverables
 
@@ -276,10 +253,6 @@ npm run build  # Test production build
 ✅ ERD Diagram  
 ✅ README dengan instruksi lengkap  
 ✅ AI Chatbot terintegrasi dengan penjelasan cara kerja
-
-## 👨‍💻 Author
-
-Developed as a test project for Task Management application with AI integration.
 
 ---
 
