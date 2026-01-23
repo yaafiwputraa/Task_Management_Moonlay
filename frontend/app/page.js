@@ -11,6 +11,7 @@ export default function HomePage() {
   const router = useRouter();
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -33,6 +34,19 @@ export default function HomePage() {
       ]);
       setTasks(taskRes.data);
       setUsers(userRes.data);
+
+      // Get current user info from token
+      const token = loadTokenFromStorage();
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          const current = userRes.data.find(u => u.email === payload.email);
+          if (current) setCurrentUser(current);
+        } catch (e) {
+          console.error("Failed to parse token", e);
+        }
+      }
+
     } catch (err) {
       if (err.response?.status === 401) {
         setAuthToken(null);
@@ -115,26 +129,33 @@ export default function HomePage() {
     <div className="app-container">
       {/* Header */}
       <header className="app-header">
-        <div className="header-left">
-          <div className="logo">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 11l3 3L22 4"/>
-              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        <div className="header-brand">
+          <div className="logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
             </svg>
           </div>
-          <div>
-            <h1>Task Management</h1>
-            <p className="header-subtitle">Kelola tugas Anda dengan mudah</p>
-          </div>
+          <h1>Task Management</h1>
         </div>
-        <button className="btn btn-secondary" onClick={logout}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
-          Keluar
-        </button>
+        
+        <div className="header-actions">
+          <div className="user-profile">
+            <div className="avatar-placeholder">
+              {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
+            </div>
+            <div className="user-info-text">
+              <span className="user-name">{currentUser?.name || "User"}</span>
+              <span className="user-role">Member</span>
+            </div>
+          </div>
+          <div className="divider-v"></div>
+          <button className="btn-signout" onClick={logout}>
+            Sign Out
+          </button>
+        </div>
       </header>
 
       {/* Stats Cards */}
@@ -261,12 +282,9 @@ export default function HomePage() {
             onDelete={handleDelete}
           />
         </div>
-
-        {/* Chatbot Sidebar */}
-        <aside className="chatbot-section">
-          <ChatbotPanel />
-        </aside>
       </div>
+
+      <ChatbotPanel />
 
       <style jsx>{`
         .app-container {
@@ -277,51 +295,124 @@ export default function HomePage() {
         }
 
         .app-header {
+          position: sticky;
+          top: 0;
+          z-index: 50;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 20px 24px;
-          background: white;
-          border-radius: 16px;
-          box-shadow: var(--shadow);
-          margin-bottom: 24px;
+          padding: 16px 32px;
+          margin: 0 -20px 32px -20px;
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(8px);
+          border-bottom: 1px solid rgba(0,0,0,0.05);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
         }
 
-        .header-left {
-          display: flex;
-          align-items: center;
-          gap: 16px;
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        .logo {
-          width: 48px;
-          height: 48px;
-          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-          border-radius: 12px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.25);
         }
 
         .app-header h1 {
-          font-size: 20px;
-          font-weight: 700;
-          color: var(--gray-800);
+          font-size: 22px;
+          font-weight: 800;
+          background: linear-gradient(to right, var(--gray-900), var(--gray-600));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
           margin: 0;
+          letter-spacing: -0.5px;
         }
 
-        .header-subtitle {
-          font-size: 13px;
-          color: var(--gray-500);
-          margin: 2px 0 0;
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-placeholder {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px var(--gray-200);
+        }
+
+        .user-info-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--gray-900);
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .divider-v {
+            width: 1px;
+            height: 24px;
+            background: var(--gray-200);
+        }
+
+        .btn-signout {
+            background: white;
+            border: 1px solid var(--danger-light);
+            color: var(--danger);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-signout:hover {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+            transform: translateY(-1px);
         }
 
         .stats-container {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: 16px;
-          margin-bottom: 24px;
+          margin-bottom: 32px;
         }
 
         .stat-card {
@@ -331,12 +422,13 @@ export default function HomePage() {
           display: flex;
           align-items: center;
           gap: 16px;
-          box-shadow: var(--shadow-sm);
+          box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+          border: 1px solid var(--gray-100);
           transition: all 0.2s ease;
         }
 
         .stat-card:hover {
-          box-shadow: var(--shadow-md);
+          box-shadow: 0 4px 6px rgba(0,0,0,0.05);
           transform: translateY(-2px);
         }
 
@@ -350,23 +442,23 @@ export default function HomePage() {
         }
 
         .stat-icon.total {
-          background: var(--primary-light);
-          color: var(--primary);
+          background: #eff6ff; /* blue-50 */
+          color: #3b82f6; /* blue-500 */
         }
 
         .stat-icon.todo {
-          background: var(--gray-100);
-          color: var(--gray-600);
+          background: #f3f4f6; /* gray-100 */
+          color: #6b7280; /* gray-500 */
         }
 
         .stat-icon.progress {
-          background: var(--warning-light);
-          color: #b45309;
+          background: #fff7ed; /* orange-50 */
+          color: #f97316; /* orange-500 */
         }
 
         .stat-icon.done {
-          background: var(--success-light);
-          color: #047857;
+          background: #f0fdf4; /* green-50 */
+          color: #22c55e; /* green-500 */
         }
 
         .stat-info {
@@ -377,7 +469,7 @@ export default function HomePage() {
         .stat-number {
           font-size: 24px;
           font-weight: 700;
-          color: var(--gray-800);
+          color: var(--gray-900);
         }
 
         .stat-label {
@@ -386,31 +478,24 @@ export default function HomePage() {
         }
 
         .main-content {
-          display: grid;
-          grid-template-columns: 1fr 380px;
-          gap: 24px;
-        }
-
-        .task-section {
-          min-width: 0;
+          margin-bottom: 40px;
         }
 
         .section-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 20px;
+          margin-bottom: 24px;
           flex-wrap: wrap;
           gap: 16px;
         }
 
         .filter-tabs {
           display: flex;
-          gap: 8px;
-          background: white;
-          padding: 6px;
-          border-radius: 10px;
-          box-shadow: var(--shadow-sm);
+          gap: 4px;
+          background: var(--gray-100);
+          padding: 4px;
+          border-radius: 12px;
         }
 
         .filter-tab {
@@ -423,29 +508,30 @@ export default function HomePage() {
           color: var(--gray-600);
           background: transparent;
           border: none;
-          border-radius: 6px;
+          border-radius: 8px;
           cursor: pointer;
           transition: all 0.2s ease;
         }
 
         .filter-tab:hover {
-          background: var(--gray-50);
+          color: var(--gray-900);
         }
 
         .filter-tab.active {
-          background: var(--primary);
-          color: white;
+          background: white;
+          color: var(--gray-900);
+          box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
         .tab-count {
-          padding: 2px 8px;
+          padding: 2px 6px;
           font-size: 11px;
-          background: rgba(0,0,0,0.1);
-          border-radius: 10px;
+          background: rgba(0,0,0,0.05);
+          border-radius: 6px;
         }
 
         .filter-tab.active .tab-count {
-          background: rgba(255,255,255,0.2);
+          background: var(--gray-100);
         }
 
         .modal-overlay {
@@ -460,23 +546,24 @@ export default function HomePage() {
           justify-content: center;
           z-index: 1000;
           padding: 20px;
+          backdrop-filter: blur(4px);
         }
 
         .modal {
           background: white;
-          border-radius: 16px;
+          border-radius: 20px;
           width: 100%;
           max-width: 500px;
           max-height: 90vh;
           overflow-y: auto;
-          box-shadow: var(--shadow-lg);
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         .modal-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 20px 24px;
+          padding: 24px;
           border-bottom: 1px solid var(--gray-100);
         }
 
@@ -484,13 +571,14 @@ export default function HomePage() {
           font-size: 18px;
           font-weight: 600;
           margin: 0;
+          color: var(--gray-900);
         }
 
         .modal-close {
           width: 32px;
           height: 32px;
           border: none;
-          background: var(--gray-100);
+          background: var(--gray-50);
           border-radius: 8px;
           cursor: pointer;
           display: flex;
@@ -501,162 +589,45 @@ export default function HomePage() {
         }
 
         .modal-close:hover {
-          background: var(--gray-200);
+          background: var(--gray-100);
           color: var(--gray-700);
         }
 
-        .chatbot-section {
-          position: sticky;
-          top: 20px;
-          height: fit-content;
-        }
-
         @media (max-width: 1024px) {
-          .main-content {
-            grid-template-columns: 1fr;
-          }
-
-          .chatbot-section {
-            position: static;
-          }
-
           .stats-container {
             grid-template-columns: repeat(2, 1fr);
           }
         }
 
         @media (max-width: 768px) {
-          .app-container {
-            padding: 12px;
-          }
-
-          .app-header {
-            padding: 16px;
-            border-radius: 12px;
-            flex-direction: column;
-            gap: 16px;
+          .app-title {
+            position: static;
+            transform: none;
+            order: -1;
+            margin-bottom: 16px;
+            width: 100%;
             text-align: center;
           }
 
-          .header-left {
+          .app-header {
             flex-direction: column;
-            gap: 12px;
+            align-items: flex-start;
           }
 
-          .app-header h1 {
-            font-size: 18px;
+          .user-nav {
+            width: 100%;
+            justify-content: center;
           }
 
           .stats-container {
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            margin-bottom: 16px;
-          }
-
-          .stat-card {
-            padding: 16px;
-            gap: 12px;
-          }
-
-          .stat-icon {
-            width: 40px;
-            height: 40px;
-          }
-
-          .stat-number {
-            font-size: 20px;
-          }
-
-          .section-header {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 12px;
-          }
-
-          .filter-tabs {
-            overflow-x: auto;
-            width: 100%;
-            justify-content: flex-start;
-            padding: 4px;
-          }
-
-          .filter-tab {
-            padding: 8px 12px;
-            font-size: 12px;
-            white-space: nowrap;
-          }
-
-          .btn-primary {
-            width: 100%;
-            justify-content: center;
-          }
-
-          .modal {
-            margin: 10px;
-            max-height: 85vh;
-          }
-
-          .modal-header {
-            padding: 16px;
-          }
-
-          .modal-header h2 {
-            font-size: 16px;
           }
         }
 
         @media (max-width: 480px) {
-          .app-container {
-            padding: 8px;
-          }
-
           .stats-container {
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-          }
-
-          .stat-card {
-            padding: 12px;
-            flex-direction: column;
-            text-align: center;
-            gap: 8px;
-          }
-
-          .stat-icon {
-            width: 36px;
-            height: 36px;
-          }
-
-          .stat-number {
-            font-size: 18px;
-          }
-
-          .stat-label {
-            font-size: 11px;
-          }
-
-          .logo {
-            width: 40px;
-            height: 40px;
-          }
-
-          .logo svg {
-            width: 22px;
-            height: 22px;
-          }
-
-          .filter-tabs {
-            gap: 4px;
-          }
-
-          .filter-tab {
-            padding: 6px 10px;
-            font-size: 11px;
-          }
-
-          .tab-count {
-            padding: 1px 6px;
-            font-size: 10px;
+            grid-template-columns: 1fr;
           }
         }
       `}</style>

@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import api from "../lib/api";
 
 export default function ChatbotPanel() {
+  const [isOpen, setIsOpen] = useState(false);
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,8 +16,10 @@ export default function ChatbotPanel() {
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (isOpen) {
+      scrollToBottom();
+    }
+  }, [messages, isOpen]);
 
   const ask = async () => {
     if (!question.trim()) return;
@@ -47,185 +50,229 @@ export default function ChatbotPanel() {
   };
 
   return (
-    <div className="chatbot-panel">
-      <div className="chatbot-header">
-        <div className="chatbot-avatar">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 8V4H8"/>
-            <rect width="16" height="12" x="4" y="8" rx="2"/>
-            <path d="M2 14h2"/>
-            <path d="M20 14h2"/>
-            <path d="M15 13v2"/>
-            <path d="M9 13v2"/>
+    <>
+      <button 
+        className={`chatbot-trigger ${isOpen ? 'open' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle Chatbot"
+      >
+        {isOpen ? (
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
-        </div>
-        <div>
-          <h3>AI Assistant</h3>
-          <span className="status-dot">● Online</span>
-        </div>
-      </div>
-
-      <div className="chat-messages">
-        {messages.length === 0 && (
-          <div className="welcome-message">
-            <div className="welcome-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
-            </div>
-            <p>Hai! Saya siap membantu Anda mengelola task.</p>
-            <div className="suggestions">
-              <button onClick={() => setQuestion("Apa saja task yang belum selesai?")}>
-                Task belum selesai
-              </button>
-              <button onClick={() => setQuestion("Ringkas semua task saya")}>
-                Ringkas semua task
-              </button>
-            </div>
-          </div>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
         )}
+      </button>
 
-        {messages.map((msg, idx) => (
-          <div key={idx} className={`message ${msg.type}`}>
-            {msg.type === "bot" && (
-              <div className="message-avatar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 8V4H8"/>
-                  <rect width="16" height="12" x="4" y="8" rx="2"/>
-                </svg>
+      {isOpen && (
+        <div className="chatbot-window">
+          <div className="chatbot-header">
+            <div className="header-info">
+              <h3>AI Assistant</h3>
+            </div>
+            <button className="close-btn" onClick={() => setIsOpen(false)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+
+          <div className="chat-messages">
+            {messages.length === 0 && (
+              <div className="welcome-message">
+                <div className="welcome-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                </div>
+                <p>Ada yang bisa saya bantu?</p>
+                <div className="suggestions">
+                  <button onClick={() => setQuestion("Task saya hari ini?")}>Task hari ini</button>
+                  <button onClick={() => setQuestion("Apa yang overdue?")}>Task terlambat</button>
+                </div>
               </div>
             )}
-            <div className="message-content">
-              {msg.type === "bot" ? (
-                <ReactMarkdown
-                  components={{
-                    p: ({node, ...props}) => <p style={{margin: 0, marginBottom: '8px'}} {...props} />,
-                    strong: ({node, ...props}) => <strong style={{fontWeight: 600, color: 'inherit'}} {...props} />,
-                    ul: ({node, ...props}) => <ul style={{margin: '8px 0', paddingLeft: '20px'}} {...props} />,
-                    ol: ({node, ...props}) => <ol style={{margin: '8px 0', paddingLeft: '20px'}} {...props} />,
-                    li: ({node, ...props}) => <li style={{marginBottom: '4px'}} {...props} />,
-                  }}
-                >
-                  {msg.text}
-                </ReactMarkdown>
-              ) : (
-                msg.text
-              )}
-            </div>
-          </div>
-        ))}
 
-        {loading && (
-          <div className="message bot">
-            <div className="message-avatar">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 8V4H8"/>
-                <rect width="16" height="12" x="4" y="8" rx="2"/>
+            {messages.map((msg, idx) => (
+              <div key={idx} className={`message ${msg.type}`}>
+                <div className="message-content">
+                  {msg.type === "bot" ? (
+                    <ReactMarkdown
+                      components={{
+                        p: ({node, ...props}) => <p style={{margin: 0, marginBottom: '8px'}} {...props} />,
+                        strong: ({node, ...props}) => <strong style={{fontWeight: 600, color: 'inherit'}} {...props} />,
+                        ul: ({node, ...props}) => <ul style={{margin: '8px 0', paddingLeft: '20px'}} {...props} />,
+                        ol: ({node, ...props}) => <ol style={{margin: '8px 0', paddingLeft: '20px'}} {...props} />,
+                        li: ({node, ...props}) => <li style={{marginBottom: '4px'}} {...props} />,
+                      }}
+                    >
+                      {msg.text}
+                    </ReactMarkdown>
+                  ) : (
+                    msg.text
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {loading && (
+              <div className="message bot">
+                <div className="message-content typing">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <div className="chat-input-container">
+            <textarea
+              className="chat-input"
+              rows={1}
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Tanya AI..."
+              disabled={loading}
+            />
+            <button 
+              className="send-button" 
+              onClick={ask} 
+              disabled={loading || !question.trim()}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
               </svg>
-            </div>
-            <div className="message-content typing">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
+            </button>
           </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className="chat-input-container">
-        <textarea
-          className="chat-input"
-          rows={1}
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Tanyakan tentang task..."
-          disabled={loading}
-        />
-        <button 
-          className="send-button" 
-          onClick={ask} 
-          disabled={loading || !question.trim()}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-          </svg>
-        </button>
-      </div>
+        </div>
+      )}
 
       <style jsx>{`
-        .chatbot-panel {
+        .chatbot-trigger {
+          position: fixed;
+          bottom: 30px;
+          left: 30px;
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
+          background: var(--primary);
+          color: white;
+          border: none;
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chatbot-trigger:hover {
+          transform: scale(1.05);
+          background: var(--primary-dark);
+        }
+
+        .chatbot-trigger.open {
+          transform: rotate(90deg);
+          background: var(--gray-800);
+        }
+
+        .chatbot-window {
+          position: fixed;
+          bottom: 100px;
+          left: 30px;
+          width: 380px;
+          height: 500px;
           background: white;
-          border-radius: 16px;
-          box-shadow: var(--shadow);
+          border-radius: 20px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.12);
           display: flex;
           flex-direction: column;
-          height: 600px;
+          z-index: 1000;
           overflow: hidden;
+          animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          border: 1px solid var(--gray-200);
+        }
+
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(20px) scale(0.95); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .chatbot-header {
           display: flex;
+          justify-content: space-between;
           align-items: center;
-          gap: 12px;
           padding: 16px 20px;
-          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-          color: white;
+          background: white;
+          border-bottom: 1px solid var(--gray-100);
         }
 
-        .chatbot-avatar {
-          width: 40px;
-          height: 40px;
-          background: rgba(255,255,255,0.2);
-          border-radius: 10px;
+        .header-info h3 {
+          font-size: 16px;
+          font-weight: 600;
+          margin: 0;
+          color: var(--gray-900);
+        }
+
+        .status-dot {
+          font-size: 12px;
+          color: var(--success);
+          font-weight: 500;
+        }
+
+        .close-btn {
+          background: transparent;
+          border: none;
+          color: var(--gray-400);
+          cursor: pointer;
+          padding: 4px;
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
         }
 
-        .chatbot-header h3 {
-          font-size: 15px;
-          font-weight: 600;
-          margin: 0;
-        }
-
-        .status-dot {
-          font-size: 11px;
-          color: #86efac;
+        .close-btn:hover {
+          background: var(--gray-100);
+          color: var(--gray-600);
         }
 
         .chat-messages {
           flex: 1;
           overflow-y: auto;
           padding: 20px;
+          background: var(--gray-50);
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 12px;
         }
 
         .welcome-message {
           text-align: center;
-          padding: 20px;
+          margin-top: 40px;
         }
 
         .welcome-icon {
-          width: 56px;
-          height: 56px;
-          background: var(--primary-light);
+          width: 48px;
+          height: 48px;
+          background: white;
           color: var(--primary);
-          border-radius: 16px;
+          border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
-          margin: 0 auto 16px;
-        }
-
-        .welcome-message p {
-          color: var(--gray-600);
-          font-size: 14px;
-          margin: 0 0 16px;
+          margin: 0 auto 12px;
+          box-shadow: var(--shadow-sm);
         }
 
         .suggestions {
@@ -233,58 +280,46 @@ export default function ChatbotPanel() {
           flex-wrap: wrap;
           gap: 8px;
           justify-content: center;
+          margin-top: 16px;
         }
 
         .suggestions button {
-          padding: 8px 12px;
-          font-size: 12px;
-          background: var(--gray-100);
+          background: white;
           border: 1px solid var(--gray-200);
-          border-radius: 20px;
-          color: var(--gray-700);
+          padding: 6px 12px;
+          border-radius: 16px;
+          font-size: 12px;
           cursor: pointer;
-          transition: all 0.2s ease;
+          color: var(--gray-600);
+          transition: all 0.2s;
         }
 
         .suggestions button:hover {
-          background: var(--primary-light);
           border-color: var(--primary);
           color: var(--primary);
         }
 
         .message {
           display: flex;
-          gap: 10px;
-          max-width: 90%;
+          flex-direction: column;
+          max-width: 85%;
         }
 
         .message.user {
           align-self: flex-end;
-          flex-direction: row-reverse;
+          align-items: flex-end;
         }
 
-        .message.error .message-content {
-          background: var(--danger-light);
-          color: var(--danger);
-        }
-
-        .message-avatar {
-          width: 28px;
-          height: 28px;
-          background: var(--primary-light);
-          color: var(--primary);
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
+        .message.bot {
+          align-self: flex-start;
         }
 
         .message-content {
-          padding: 12px 16px;
+          padding: 10px 14px;
           border-radius: 12px;
           font-size: 14px;
           line-height: 1.5;
+          position: relative;
         }
 
         .message.user .message-content {
@@ -294,41 +329,23 @@ export default function ChatbotPanel() {
         }
 
         .message.bot .message-content {
-          background: var(--gray-100);
+          background: white;
           color: var(--gray-800);
+          border: 1px solid var(--gray-200);
           border-bottom-left-radius: 4px;
-          white-space: pre-wrap;
-          word-wrap: break-word;
-        }
-
-        .message.bot .message-content strong {
-          font-weight: 600;
-          color: var(--gray-900);
-        }
-
-        .message.bot .message-content ul,
-        .message.bot .message-content ol {
-          margin: 8px 0;
-          padding-left: 20px;
-        }
-
-        .message.bot .message-content li {
-          margin-bottom: 4px;
-        }
-
-        .message.bot .message-content p:last-child {
-          margin-bottom: 0;
+          box-shadow: var(--shadow-sm);
         }
 
         .typing {
           display: flex;
           gap: 4px;
-          padding: 16px !important;
+          padding: 12px 16px !important;
+          width: fit-content;
         }
 
         .typing span {
-          width: 8px;
-          height: 8px;
+          width: 6px;
+          height: 6px;
           background: var(--gray-400);
           border-radius: 50%;
           animation: bounce 1.4s ease-in-out infinite both;
@@ -337,188 +354,73 @@ export default function ChatbotPanel() {
         .typing span:nth-child(1) { animation-delay: -0.32s; }
         .typing span:nth-child(2) { animation-delay: -0.16s; }
 
-        @keyframes bounce {
-          0%, 80%, 100% { transform: scale(0); }
-          40% { transform: scale(1); }
-        }
-
         .chat-input-container {
-          display: flex;
-          gap: 8px;
           padding: 16px;
+          background: white;
           border-top: 1px solid var(--gray-100);
-          background: var(--gray-50);
+          display: flex;
+          gap: 10px;
+          align-items: flex-end;
         }
 
         .chat-input {
           flex: 1;
-          padding: 12px 16px;
-          font-size: 14px;
           border: 1px solid var(--gray-200);
-          border-radius: 12px;
-          background: white;
+          border-radius: 20px;
+          padding: 10px 16px;
+          font-size: 14px;
           resize: none;
+          max-height: 80px;
           outline: none;
-          transition: all 0.2s ease;
+          background: var(--gray-50);
         }
 
         .chat-input:focus {
+          background: white;
           border-color: var(--primary);
-          box-shadow: 0 0 0 3px var(--primary-light);
         }
 
         .send-button {
-          width: 44px;
-          height: 44px;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
           background: var(--primary);
           color: white;
           border: none;
-          border-radius: 12px;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.2s ease;
+          transition: all 0.2s;
         }
 
         .send-button:hover:not(:disabled) {
           background: var(--primary-dark);
-          transform: scale(1.05);
         }
 
         .send-button:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-          .chatbot-panel {
-            height: 500px;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .chatbot-panel {
-            height: 450px;
-            border-radius: 12px;
-          }
-
-          .chatbot-header {
-            padding: 12px 16px;
-          }
-
-          .chatbot-avatar {
-            width: 36px;
-            height: 36px;
-          }
-
-          .chatbot-header h3 {
-            font-size: 14px;
-          }
-
-          .chat-messages {
-            padding: 16px;
-            gap: 12px;
-          }
-
-          .welcome-message {
-            padding: 16px;
-          }
-
-          .welcome-icon {
-            width: 48px;
-            height: 48px;
-          }
-
-          .welcome-message p {
-            font-size: 13px;
-          }
-
-          .suggestions {
-            gap: 6px;
-          }
-
-          .suggestions button {
-            padding: 6px 10px;
-            font-size: 11px;
-          }
-
-          .message {
-            max-width: 95%;
-          }
-
-          .message-avatar {
-            width: 24px;
-            height: 24px;
-          }
-
-          .message-content {
-            padding: 10px 14px;
-            font-size: 13px;
-          }
-
-          .chat-input-container {
-            padding: 12px;
-            gap: 6px;
-          }
-
-          .chat-input {
-            padding: 10px 14px;
-            font-size: 13px;
-          }
-
-          .send-button {
-            width: 40px;
-            height: 40px;
-          }
+          background: var(--gray-200);
+          cursor: default;
         }
 
         @media (max-width: 480px) {
-          .chatbot-panel {
-            height: 400px;
+          .chatbot-window {
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100vh;
+            border-radius: 0;
+            border: none;
           }
-
-          .chatbot-header {
-            padding: 10px 12px;
-            gap: 10px;
-          }
-
-          .chatbot-avatar {
-            width: 32px;
-            height: 32px;
-          }
-
-          .chatbot-avatar svg {
-            width: 16px;
-            height: 16px;
-          }
-
-          .chat-messages {
-            padding: 12px;
-          }
-
-          .message-content {
-            padding: 8px 12px;
-            font-size: 12px;
-          }
-
-          .chat-input {
-            padding: 8px 12px;
-            font-size: 12px;
-          }
-
-          .send-button {
-            width: 36px;
-            height: 36px;
-          }
-
-          .send-button svg {
-            width: 16px;
-            height: 16px;
+          
+          .chatbot-trigger {
+            bottom: 20px;
+            right: 20px;
+            left: auto;
           }
         }
       `}</style>
-    </div>
+    </>
   );
 }
