@@ -240,21 +240,6 @@ Lihat file **`docs/erd.md`** atau diagram berikut:
 **Relasi:**
 - One-to-Many: `users` ← `tasks` (via `assignee_id`)
 
-## 📝 Catatan Teknis
-
-- **JWT Token Expiry**: 60 menit (configurable di `.env`)
-- **CORS**: Frontend default `http://localhost:3000` (edit di `backend/app/main.py`)
-- **Database Migration**: Gunakan `alembic` jika perlu (saat ini auto-create via SQLAlchemy)
-- **Seeder**: `backend/seed.py` membuat 3 user dummy dan beberapa sample tasks
-
-## 📦 Deliverables
-
-✅ Source code (frontend + backend)  
-✅ API Documentation (Postman Collection)  
-✅ ERD Diagram  
-✅ README dengan instruksi lengkap  
-✅ AI Chatbot terintegrasi dengan penjelasan cara kerja
-
 ---
 
 **Last Updated**: January 2026
