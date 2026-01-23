@@ -19,7 +19,6 @@ Aplikasi Task Management sederhana berbasis web yang memungkinkan pengelolaan tu
 - **Styling**: CSS Modules + Styled JSX
 - **State Management**: React Hooks
 - **HTTP Client**: Axios
-- **UI Components**: Custom components dengan Jira-inspired design
 
 ### Backend
 - **Framework**: FastAPI (Python)
