@@ -55,9 +55,36 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"title\": \"Sample\",\n  \"description\": \"Desc\",\n  \"status\": \"Todo\",\n  \"deadline\": null,\n  \"assignee_id\": 1\n}"
+          "raw": "{\n  \"title\": \"Sample Task\",\n  \"description\": \"Task description\",\n  \"status\": \"Todo\",\n  \"deadline\": \"2026-01-30T10:00:00\",\n  \"assignee_id\": 1\n}"
         },
         "url": { "raw": "{{baseUrl}}/tasks", "host": ["{{baseUrl}}"], "path": ["tasks"] }
+      },
+      "response": []
+    },
+    {
+      "name": "Tasks - Update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Updated Task\",\n  \"description\": \"Updated description\",\n  \"status\": \"In Progress\",\n  \"deadline\": \"2026-01-30T10:00:00\",\n  \"assignee_id\": 2\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/tasks/1", "host": ["{{baseUrl}}"], "path": ["tasks", "1"] }
+      },
+      "response": []
+    },
+    {
+      "name": "Tasks - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": { "raw": "{{baseUrl}}/tasks/1", "host": ["{{baseUrl}}"], "path": ["tasks", "1"] }
       },
       "response": []
     },
