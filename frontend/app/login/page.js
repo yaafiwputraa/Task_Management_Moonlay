@@ -61,8 +61,10 @@ export default function LoginPage() {
         <div className="login-header">
           <div className="login-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 11l3 3L22 4"/>
-              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
             </svg>
           </div>
           <h1>Task Management</h1>
@@ -136,18 +138,17 @@ export default function LoginPage() {
           align-items: center;
           justify-content: center;
           padding: 24px;
-          background-color: #f8fafc;
+          background-color: var(--gray-50);
           position: relative;
         }
 
         .login-card {
           width: 100%;
           max-width: 440px;
-          background: white;
+          background: var(--gray-100);
           border-radius: 20px;
-          border: 1px solid rgba(0,0,0,0.05);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 
-                      0 0 0 1px rgba(0, 0, 0, 0.02);
+          border: 1px solid var(--gray-200);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
           overflow: hidden;
           padding: 40px;
         }
@@ -161,8 +162,8 @@ export default function LoginPage() {
           width: 56px;
           height: 56px;
           margin: 0 auto 20px;
-          color: #3b82f6; /* primary blue */
-          background: #eff6ff; /* blue-50 */
+          color: white; /* primary blue */
+          background: var(--primary); /* blue-50 */
           border-radius: 14px;
           display: flex;
           align-items: center;
@@ -172,7 +173,7 @@ export default function LoginPage() {
         .login-header h1 {
           font-size: 24px;
           font-weight: 700;
-          color: #1e293b;
+          color: var(--gray-900);
           margin-bottom: 8px;
           letter-spacing: -0.5px;
         }
@@ -191,24 +192,24 @@ export default function LoginPage() {
           margin-bottom: 8px;
           font-size: 14px;
           font-weight: 500;
-          color: #334155;
+          color: var(--gray-600);
         }
 
         .input {
           width: 100%;
           padding: 12px 14px;
           font-size: 15px;
-          border: 1px solid #e2e8f0;
+          border: 1px solid var(--gray-300);
           border-radius: 10px;
-          background: #fff;
-          color: #1e293b;
+          background: var(--gray-200);
+          color: var(--gray-800);
           transition: all 0.2s;
           outline: none;
         }
 
         .input:focus {
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
         }
 
         .error-message {
@@ -230,13 +231,16 @@ export default function LoginPage() {
           font-size: 15px;
           font-weight: 600;
           height: 48px;
-          background: #3b82f6;
-          box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+          background: var(--primary);
+          box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.2);
           transition: transform 0.1s, box-shadow 0.2s;
+          border: none;
+          color: white;
+          cursor: pointer;
         }
 
         .login-btn:hover {
-          background: #2563eb;
+          background: var(--primary-dark);
           transform: translateY(-1px);
         }
 
@@ -247,13 +251,13 @@ export default function LoginPage() {
         .login-footer {
           margin-top: 24px;
           text-align: center;
-        }
-
-        .login-footer p {
-          color: #94a3b8;
+        }var(--gray-500);
           font-size: 12px;
-          background: #f8fafc;
+          background: var(--gray-200);
           display: inline-block;
+          padding: 6px 12px;
+          border-radius: 20px;
+          border: 1px solid var(--gray-300)
           padding: 6px 12px;
           border-radius: 20px;
           border: 1px solid #f1f5f9;

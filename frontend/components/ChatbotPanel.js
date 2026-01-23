@@ -183,7 +183,7 @@ export default function ChatbotPanel() {
         .chatbot-trigger {
           position: fixed;
           bottom: 30px;
-          left: 30px;
+          right: 30px;
           width: 56px;
           height: 56px;
           border-radius: 50%;
@@ -212,12 +212,12 @@ export default function ChatbotPanel() {
         .chatbot-window {
           position: fixed;
           bottom: 100px;
-          left: 30px;
+          right: 30px;
           width: 380px;
           height: 500px;
-          background: white;
+          background: var(--gray-100);
           border-radius: 20px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.5);
           display: flex;
           flex-direction: column;
           z-index: 1000;
@@ -236,8 +236,8 @@ export default function ChatbotPanel() {
           justify-content: space-between;
           align-items: center;
           padding: 16px 20px;
-          background: white;
-          border-bottom: 1px solid var(--gray-100);
+          background: var(--gray-100);
+          border-bottom: 1px solid var(--gray-200);
         }
 
         .header-info h3 {
@@ -288,7 +288,7 @@ export default function ChatbotPanel() {
         .welcome-icon {
           width: 48px;
           height: 48px;
-          background: white;
+          background: var(--gray-200);
           color: var(--primary);
           border-radius: 12px;
           display: flex;
@@ -307,8 +307,8 @@ export default function ChatbotPanel() {
         }
 
         .suggestions button {
-          background: white;
-          border: 1px solid var(--gray-200);
+          background: var(--gray-200);
+          border: 1px solid var(--gray-300);
           padding: 6px 12px;
           border-radius: 16px;
           font-size: 12px;
@@ -352,9 +352,9 @@ export default function ChatbotPanel() {
         }
 
         .message.bot .message-content {
-          background: white;
-          color: var(--gray-800);
-          border: 1px solid var(--gray-200);
+          background: var(--gray-200);
+          color: var(--gray-900);
+          border: 1px solid var(--gray-300);
           border-bottom-left-radius: 4px;
           box-shadow: var(--shadow-sm);
         }
@@ -379,8 +379,8 @@ export default function ChatbotPanel() {
 
         .chat-input-container {
           padding: 16px;
-          background: white;
-          border-top: 1px solid var(--gray-100);
+          background: var(--gray-100);
+          border-top: 1px solid var(--gray-200);
           display: flex;
           gap: 10px;
           align-items: flex-end;
@@ -388,18 +388,21 @@ export default function ChatbotPanel() {
 
         .chat-input {
           flex: 1;
-          border: 1px solid var(--gray-200);
+          border: 1px solid var(--gray-300);
           border-radius: 20px;
           padding: 10px 16px;
           font-size: 14px;
           resize: none;
           max-height: 80px;
           outline: none;
-          background: var(--gray-50);
+          background-color: var(--gray-50);
+          color: var(--gray-900);
+          transition: all 0.2s;
         }
 
         .chat-input:focus {
-          background: white;
+          background-color: var(--gray-50);
+          color: var(--gray-900);
           border-color: var(--primary);
         }
 

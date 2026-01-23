@@ -118,7 +118,7 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
         }
 
         .board-column {
-          background: #f4f5f7;
+          background: var(--gray-100);
           border-radius: 10px;
           padding: 12px;
           min-height: 400px;
@@ -128,18 +128,18 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
         }
 
         .board-column.todo {
-            background: #f8fafc; /* Slate 50 */
-            border-top-color: #64748b;
+            background: var(--gray-100); /* Slate 50 */
+            border-top-color: var(--gray-600);
         }
 
         .board-column.in-progress {
-            background: #eff6ff; /* Blue 50 */
-            border-top-color: #3b82f6;
+            background: var(--gray-100); /* Blue 50 */
+            border-top-color: var(--primary);
         }
 
         .board-column.done {
-            background: #f0fdf4; /* Green 50 */
-            border-top-color: #22c55e;
+            background: var(--gray-100); /* Green 50 */
+            border-top-color: var(--success);
         }
 
         .column-header {
@@ -162,17 +162,17 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
         }
 
         .task-card {
-          background: white;
+          background: var(--gray-100);
           border-radius: 8px;
           padding: 16px;
-          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+          box-shadow: 0 1px 2px rgba(0,0,0,0.4);
           transition: all 0.2s ease;
-          border: 1px solid transparent;
+          border: 1px solid var(--gray-200);
           cursor: pointer;
         }
 
         .task-card:hover {
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.5);
           border-color: var(--primary);
         }
 
@@ -187,24 +187,24 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
             width: 40px;
             height: 4px;
             border-radius: 2px;
-            background: #e2e8f0;
+            background: var(--gray-300);
         }
 
         .priority-indicator.high {
-            background: #ef4444;
+            background: var(--danger);
         }
 
         .task-title {
             font-size: 15px;
             font-weight: 600;
-            color: #172b4d;
+            color: var(--gray-900);
             margin: 0 0 8px;
             line-height: 1.4;
         }
         
         .task-desc-preview {
             font-size: 13px;
-            color: #6b778c;
+            color: var(--gray-500);
             margin-bottom: 16px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -223,20 +223,20 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
             font-size: 11px;
             padding: 2px 6px;
             border-radius: 4px;
-            background: #e2e8f0;
-            color: #475569;
+            background: var(--gray-200);
+            color: var(--gray-600);
             font-weight: 600;
         }
 
         .date-badge.overdue {
-            background: #fee2e2;
-            color: #ef4444;
+            background: var(--danger-light);
+            color: var(--danger);
         }
 
         .assignee-avatar {
             width: 24px;
             height: 24px;
-            background: #3b82f6;
+            background: var(--primary);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -260,24 +260,24 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
         .action-btn {
             padding: 4px;
             border-radius: 4px;
-            color: #6b778c;
+            color: var(--gray-500);
             background: transparent;
             border: none;
             cursor: pointer;
         }
 
         .action-btn:hover {
-            background: #e2e8f0;
-            color: #172b4d;
+            background: var(--gray-300);
+            color: var(--gray-900);
         }
 
         .empty-column-placeholder {
             text-align: center;
             padding: 20px;
-            color: #9ca3af;
+            color: var(--gray-500);
             font-size: 13px;
             font-style: italic;
-            border: 2px dashed #e5e7eb;
+            border: 2px dashed var(--gray-300);
             border-radius: 8px;
         }
 

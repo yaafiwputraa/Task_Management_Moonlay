@@ -173,10 +173,10 @@ export default function HomePage() {
   }
 
   return (
-    <div className="app-container">
-      {/* Header */}
-      <header className="app-header">
-        <div className="header-brand">
+    <div className="layout-container">
+      {/* Sidebar Navigation */}
+      <aside className="sidebar">
+        <div className="sidebar-header">
           <div className="logo-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="3" width="7" height="7"></rect>
@@ -187,8 +187,20 @@ export default function HomePage() {
           </div>
           <h1>Task Management</h1>
         </div>
-        
-        <div className="header-actions">
+
+        <nav className="sidebar-nav">
+          <div className="nav-group">
+            <span className="nav-label">MENU</span>
+            <button 
+              className="nav-item active"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              Dashboard
+            </button>
+          </div>
+        </nav>
+
+        <div className="sidebar-footer">
           <div className="user-profile">
             <div className="avatar-placeholder">
               {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
@@ -197,213 +209,114 @@ export default function HomePage() {
               <span className="user-name">{currentUser?.name || "User"}</span>
             </div>
           </div>
-          <div className="divider-v"></div>
-          <button className="btn-signout" onClick={logout}>
-            Sign Out
+          <button className="btn-signout-icon" onClick={logout} title="Sign Out">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
           </button>
         </div>
-      </header>
-
-      {/* Stats Cards */}
-      <div className="stats-container">
-        <div className="stat-card">
-          <div className="stat-icon total">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-            </svg>
-          </div>
-          <div className="stat-info">
-            <span className="stat-number">{taskStats.total}</span>
-            <span className="stat-label">Total Task</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon todo">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-          </div>
-          <div className="stat-info">
-            <span className="stat-number">{taskStats.todo}</span>
-            <span className="stat-label">Todo</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon progress">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2v4"/>
-              <path d="M12 18v4"/>
-              <path d="m4.93 4.93 2.83 2.83"/>
-              <path d="m16.24 16.24 2.83 2.83"/>
-              <path d="M2 12h4"/>
-              <path d="M18 12h4"/>
-              <path d="m4.93 19.07 2.83-2.83"/>
-              <path d="m16.24 7.76 2.83-2.83"/>
-            </svg>
-          </div>
-          <div className="stat-info">
-            <span className="stat-number">{taskStats.inProgress}</span>
-            <span className="stat-label">In Progress</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon done">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-          </div>
-          <div className="stat-info">
-            <span className="stat-number">{taskStats.done}</span>
-            <span className="stat-label">Done</span>
-          </div>
-        </div>
-      </div>
+      </aside>
 
       {/* Main Content */}
-      <div className="main-content">
-        <div className="task-section">
-          {/* Task Header */}
-          <div className="section-header">
-            <div className="filter-controls">
-              <select
-                className="select-filter"
-                value={filterAssignee}
-                onChange={(e) => setFilterAssignee(e.target.value)}
-              >
-                <option value="all">Semua Assignee</option>
-                <option value="unassigned">Belum Ditugaskan</option>
-                {users.map((u) => (
-                  <option key={u.id} value={u.id}>
-                    {u.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                setShowForm(true);
-                setEditing(null);
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              Tambah Task
-            </button>
-          </div>
-
-          {/* Delete Confirmation Modal */}
-          {deleteData && (
-            <div className="modal-overlay" onClick={() => setDeleteData(null)}>
-              <div
-                className="modal animate-fade-in"
-                onClick={(e) => e.stopPropagation()}
-                style={{ maxWidth: "400px" }}
-              >
-                <div className="modal-header">
-                  <h2>Hapus Task</h2>
-                  <button
-                    className="modal-close"
-                    onClick={() => setDeleteData(null)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="modal-body" style={{ padding: "0 24px 24px" }}>
-                  <p style={{ margin: "0 0 8px" }}>
-                    Apakah Anda yakin ingin menghapus task{" "}
-                    <strong>"{deleteData.title}"</strong>?
-                  </p>
-                  <p
-                    style={{
-                      margin: 0,
-                      color: "var(--gray-500)",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Tindakan ini tidak dapat dibatalkan.
-                  </p>
-                </div>
-                <div
-                  className="modal-footer"
-                  style={{
-                    padding: "16px 24px",
-                    background: "var(--gray-50)",
-                    borderTop: "1px solid var(--gray-200)",
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    gap: "12px",
-                    borderRadius: "0 0 16px 16px",
-                  }}
+      <main className="main-content">
+        <header className="top-bar">
+          <h2 className="page-title">Dashboard Overview</h2>
+          <div className="top-actions">
+              <div className="filter-wrapper">
+                <select
+                  className="select-filter"
+                  value={filterAssignee}
+                  onChange={(e) => setFilterAssignee(e.target.value)}
                 >
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => setDeleteData(null)}
-                  >
-                    Batal
-                  </button>
-                  <button className="btn btn-danger" onClick={confirmDelete}>
-                    Hapus
-                  </button>
+                  <option value="all">Semua Assignee</option>
+                  <option value="unassigned">Belum Ditugaskan</option>
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="filter-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                </div>
+              </div>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  setShowForm(true);
+                  setEditing(null);
+                }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Task Baru
+              </button>
+            </div>
+        </header>
+
+        <div className="content-scrollable">
+          {/* Stats Cards - Only on Dashboard */}
+            <div className="stats-container">
+              <div className="stat-card">
+                <div className="stat-icon total">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                  </svg>
+                </div>
+                <div className="stat-info">
+                  <span className="stat-number">{taskStats.total}</span>
+                  <span className="stat-label">Total Task</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon todo">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                </div>
+                <div className="stat-info">
+                  <span className="stat-number">{taskStats.todo}</span>
+                  <span className="stat-label">Todo</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon progress">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2v4"/>
+                    <path d="M12 18v4"/>
+                    <path d="m4.93 4.93 2.83 2.83"/>
+                    <path d="m16.24 16.24 2.83 2.83"/>
+                    <path d="M2 12h4"/>
+                    <path d="M18 12h4"/>
+                    <path d="m4.93 19.07 2.83-2.83"/>
+                    <path d="m16.24 7.76 2.83-2.83"/>
+                  </svg>
+                </div>
+                <div className="stat-info">
+                  <span className="stat-number">{taskStats.inProgress}</span>
+                  <span className="stat-label">In Progress</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon done">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                </div>
+                <div className="stat-info">
+                  <span className="stat-number">{taskStats.done}</span>
+                  <span className="stat-label">Done</span>
                 </div>
               </div>
             </div>
-          )}
 
-          {/* Task Form Modal */}
-          {showForm && (
-            <div className="modal-overlay" onClick={() => { setShowForm(false); setEditing(null); }}>
-              <div className="modal animate-fade-in" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                  <h2>{editing ? "Edit Task" : "Tambah Task Baru"}</h2>
-                  <button className="modal-close" onClick={() => { setShowForm(false); setEditing(null); }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"/>
-                      <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                  </button>
-                </div>
-                <TaskForm
-                  onSubmit={editing ? handleUpdate : handleCreate}
-                  onCancel={() => { setShowForm(false); setEditing(null); }}
-                  initial={{ ...(editing || {}), users }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Task List */}
+          {/* Task Content */}
           <TaskList
             tasks={filteredTasks}
             onEdit={(task) => {
@@ -412,155 +325,318 @@ export default function HomePage() {
             }}
             onDelete={handleDelete}
           />
+
         </div>
-      </div>
+      </main>
+
+      {/* Modals and Chatbot */}
+      {deleteData && (
+        <div className="modal-overlay" onClick={() => setDeleteData(null)}>
+          <div className="modal animate-fade-in" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "400px" }}>
+            <div className="modal-header">
+              <h2>Hapus Task</h2>
+              <button className="modal-close" onClick={() => setDeleteData(null)}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+              </button>
+            </div>
+            <div className="modal-body" style={{ padding: "0 24px 24px" }}>
+              <p style={{ margin: "0 0 8px", color: "var(--gray-800)" }}>Apakah Anda yakin ingin menghapus task <strong>"{deleteData.title}"</strong>?</p>
+              <p style={{ margin: 0, color: "var(--gray-500)", fontSize: "14px" }}>Tindakan ini tidak dapat dibatalkan.</p>
+            </div>
+            <div className="modal-footer" style={{ padding: "16px 24px", background: "var(--gray-50)", borderTop: "1px solid var(--gray-200)", display: "flex", justifyContent: "flex-end", gap: "12px", borderRadius: "0 0 16px 16px" }}>
+              <button className="btn btn-secondary" onClick={() => setDeleteData(null)}>Batal</button>
+              <button className="btn btn-danger" onClick={confirmDelete}>Hapus</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showForm && (
+        <div className="modal-overlay" onClick={() => { setShowForm(false); setEditing(null); }}>
+          <div className="modal animate-fade-in" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{editing ? "Edit Task" : "Tambah Task Baru"}</h2>
+              <button className="modal-close" onClick={() => { setShowForm(false); setEditing(null); }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <TaskForm
+              onSubmit={editing ? handleUpdate : handleCreate}
+              onCancel={() => { setShowForm(false); setEditing(null); }}
+              initial={{ ...(editing || {}), users }}
+            />
+          </div>
+        </div>
+      )}
 
       <ChatbotPanel />
 
       <style jsx>{`
-        .app-container {
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 20px;
-          min-height: 100vh;
-        }
-
-        .app-header {
-          position: sticky;
-          top: 0;
-          z-index: 50;
+        .layout-container {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 16px 32px;
-          margin: 0 -20px 32px -20px;
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(8px);
-          border-bottom: 1px solid rgba(0,0,0,0.05);
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+          height: 100vh;
+          background: #000;
+          overflow: hidden;
         }
 
-        .header-brand {
-            display: flex;
-            align-items: center;
-            gap: 16px;
+        /* Sidebar Styles */
+        .sidebar {
+          width: 260px;
+          background: var(--gray-100);
+          border-right: 1px solid var(--gray-200);
+          display: flex;
+          flex-direction: column;
+          flex-shrink: 0;
+        }
+
+        .sidebar-header {
+          height: 88px;
+          padding: 0 24px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          border-bottom: 1px solid var(--gray-200);
+          box-sizing: border-box;
         }
 
         .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.25);
+          width: 36px;
+          height: 36px;
+          background: var(--primary);
+          color: white;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2);
         }
 
-        .app-header h1 {
-          font-size: 22px;
-          font-weight: 800;
-          background: linear-gradient(to right, var(--gray-900), var(--gray-600));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+        .sidebar-header h1 {
+          font-size: 20px;
+          font-weight: 700;
+          color: var(--gray-900);
           margin: 0;
-          letter-spacing: -0.5px;
         }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 24px;
+        .sidebar-nav {
+          padding: 24px 16px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .nav-group {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .nav-label {
+          font-size: 11px;
+          font-weight: 700;
+          color: var(--gray-500);
+          padding: 0 12px;
+          margin-bottom: 8px;
+          letter-spacing: 0.5px;
+        }
+
+        .nav-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 12px;
+          border-radius: 8px;
+          color: var(--gray-500);
+          font-weight: 500;
+          font-size: 14px;
+          transition: all 0.2s;
+          background: transparent;
+          border: none;
+          width: 100%;
+          cursor: pointer;
+          text-align: left;
+        }
+
+        .nav-item:hover {
+          color: var(--gray-300);
+        }
+
+        .nav-item.active {
+          background: transparent;
+          border: none;
+          width: 100%;
+          cursor: pointer;
+          text-align: left;
+          background: rgba(249, 115, 22, 0.1);
+          color: var(--primary);
+          font-weight: 600;
+        }
+
+        .sidebar-footer {
+          padding: 16px;
+          border-top: 1px solid var(--gray-200);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: var(--gray-50);
         }
 
         .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
         }
 
         .avatar-placeholder {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 15px;
-            border: 2px solid white;
-            box-shadow: 0 0 0 1px var(--gray-200);
+          width: 36px;
+          height: 36px;
+          background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+          color: white;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 14px;
         }
 
         .user-info-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.3;
-            text-align: right;
+          display: flex;
+          flex-direction: column;
         }
 
         .user-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--gray-900);
+          font-weight: 600;
+          font-size: 13px;
+          color: var(--gray-900);
         }
 
         .user-role {
-            font-size: 11px;
-            color: var(--gray-500);
-            font-weight: 500;
+          font-size: 11px;
+          color: var(--gray-500);
         }
 
-        .divider-v {
-            width: 1px;
-            height: 24px;
-            background: var(--gray-200);
+        .btn-signout-icon {
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--gray-200);
+          color: var(--gray-500);
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s;
         }
 
-        .btn-signout {
-            background: white;
-            border: 1px solid var(--danger-light);
-            color: var(--danger);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        .btn-signout-icon:hover {
+          background: var(--danger-light);
+          color: var(--danger);
         }
 
-        .btn-signout:hover {
-            background: var(--danger);
-            color: white;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
-            transform: translateY(-1px);
+        /* Main Content Styles */
+        .main-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          background-color: var(--gray-50);
+        }
+
+        .top-bar {
+          height: 88px;
+          padding: 0 32px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid var(--gray-200);
+          background: var(--gray-50);
+          box-sizing: border-box;
+        }
+
+        .page-title {
+          font-size: 24px;
+          font-weight: 700;
+          color: var(--gray-900);
+          margin: 0;
+        }
+
+        .top-actions {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .filter-wrapper {
+          position: relative;
+          width: 200px;
+        }
+
+        .select-filter {
+          width: 100%;
+          appearance: none;
+          padding: 10px 16px;
+          padding-right: 36px;
+          font-size: 14px;
+          color: var(--gray-800);
+          background: var(--gray-100);
+          border: 1px solid var(--gray-200);
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-weight: 500;
+        }
+        
+        .select-filter:hover {
+          border-color: var(--gray-400);
+        }
+
+        .select-filter:focus {
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+          outline: none;
+        }
+
+        .filter-icon {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          pointer-events: none;
+          color: var(--gray-500);
+          display: flex;
+        }
+
+        .content-scrollable {
+          flex: 1;
+          overflow-y: auto;
+          padding: 32px;
         }
 
         .stats-container {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 16px;
+          gap: 20px;
           margin-bottom: 32px;
         }
-
+        
         .stat-card {
-          background: white;
+          background: var(--gray-100);
           border-radius: 12px;
           padding: 20px;
           display: flex;
           align-items: center;
           gap: 16px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-          border: 1px solid var(--gray-100);
-          transition: all 0.2s ease;
+          border: 1px solid var(--gray-200);
+          transition: all 0.2s;
         }
 
         .stat-card:hover {
-          box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+          border-color: var(--primary);
           transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .stat-icon {
@@ -570,118 +646,38 @@ export default function HomePage() {
           display: flex;
           align-items: center;
           justify-content: center;
+          flex-shrink: 0;
         }
 
-        .stat-icon.total {
-          background: #eff6ff; /* blue-50 */
-          color: #3b82f6; /* blue-500 */
-        }
-
-        .stat-icon.todo {
-          background: #f3f4f6; /* gray-100 */
-          color: #6b7280; /* gray-500 */
-        }
-
-        .stat-icon.progress {
-          background: #fff7ed; /* orange-50 */
-          color: #f97316; /* orange-500 */
-        }
-
-        .stat-icon.done {
-          background: #f0fdf4; /* green-50 */
-          color: #22c55e; /* green-500 */
-        }
+        .stat-icon.total { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .stat-icon.todo { background: rgba(100, 116, 139, 0.1); color: #64748b; }
+        .stat-icon.progress { background: rgba(249, 115, 22, 0.1); color: #f97316; }
+        .stat-icon.done { background: rgba(16, 185, 129, 0.1); color: #10b981; }
 
         .stat-info {
           display: flex;
           flex-direction: column;
-        }
-
-        .stat-number {
-          font-size: 24px;
+          gap: 4px;
+       
           font-weight: 700;
           color: var(--gray-900);
+          line-height: 1.2;
         }
 
         .stat-label {
           font-size: 13px;
           color: var(--gray-500);
-        }
-
-        .main-content {
-          margin-bottom: 40px;
-        }
-
-        .section-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 24px;
-          flex-wrap: wrap;
-          gap: 16px;
-        }
-
-        .select-filter {
-          padding: 10px 16px;
-          font-size: 14px;
-          color: var(--gray-700);
-          background: white;
-          border: 1px solid var(--gray-200);
-          border-radius: 8px;
-          outline: none;
-          min-width: 200px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-
-        .select-filter:hover {
-          border-color: var(--gray-400);
-        }
-
-        .select-filter:focus {
-          border-color: var(--primary);
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .btn-danger {
-          background: var(--danger);
-          color: white;
-          padding: 8px 16px;
-          border-radius: 8px;
-          border: none;
           font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s;
         }
 
-        .btn-danger:hover {
-          background: #dc2626;
-          box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-secondary {
-          background: white;
-          color: var(--gray-700);
-          border: 1px solid var(--gray-300);
-          padding: 8px 16px;
-          border-radius: 8px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .btn-secondary:hover {
-          background: var(--gray-50);
-        }
-
+        /* Modal Styles */
         .modal-overlay {
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
+          background: rgba(0, 0, 0, 0.7);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -691,13 +687,14 @@ export default function HomePage() {
         }
 
         .modal {
-          background: white;
+          background: var(--gray-100);
           border-radius: 20px;
           width: 100%;
           max-width: 500px;
           max-height: 90vh;
           overflow-y: auto;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+          border: 1px solid var(--gray-200);
         }
 
         .modal-header {
@@ -705,12 +702,12 @@ export default function HomePage() {
           justify-content: space-between;
           align-items: center;
           padding: 24px;
-          border-bottom: 1px solid var(--gray-100);
+          border-bottom: 1px solid var(--gray-200);
         }
 
         .modal-header h2 {
           font-size: 18px;
-          font-weight: 600;
+          font-weight: 700;
           margin: 0;
           color: var(--gray-900);
         }
@@ -719,7 +716,7 @@ export default function HomePage() {
           width: 32px;
           height: 32px;
           border: none;
-          background: var(--gray-50);
+          background: var(--gray-200);
           border-radius: 8px;
           cursor: pointer;
           display: flex;
@@ -730,8 +727,8 @@ export default function HomePage() {
         }
 
         .modal-close:hover {
-          background: var(--gray-100);
-          color: var(--gray-700);
+          background: var(--gray-300);
+          color: var(--gray-900);
         }
 
         @media (max-width: 1024px) {
@@ -741,34 +738,18 @@ export default function HomePage() {
         }
 
         @media (max-width: 768px) {
-          .app-title {
-            position: static;
-            transform: none;
-            order: -1;
-            margin-bottom: 16px;
-            width: 100%;
-            text-align: center;
-          }
-
-          .app-header {
+          .layout-container {
             flex-direction: column;
-            align-items: flex-start;
+            overflow: auto;
           }
-
-          .user-nav {
+          
+          .sidebar {
             width: 100%;
-            justify-content: center;
+            height: auto;
           }
 
-          .stats-container {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .stats-container {
-            grid-template-columns: 1fr;
+          .content-scrollable {
+            padding: 20px;
           }
         }
       `}</style>

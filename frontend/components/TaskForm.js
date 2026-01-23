@@ -136,6 +136,7 @@ export default function TaskForm({ onSubmit, onCancel, initial = {} }) {
               type="datetime-local"
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
+              style={{ colorScheme: "dark" }}
             />
           </div>
         </div>
