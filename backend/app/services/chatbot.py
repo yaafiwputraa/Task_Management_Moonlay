@@ -1,5 +1,11 @@
-from typing import List
+"""AI Chatbot service using DeepSeek API.
+
+This module provides the chatbot functionality for answering
+task-related questions using DeepSeek's language model.
+"""
+
 from datetime import datetime, timedelta
+from typing import List
 
 import httpx
 from sqlalchemy.orm import Session
@@ -96,10 +102,18 @@ def _summarize_tasks(tasks: List[Task]) -> str:
 
 
 def build_prompt(user_question: str, tasks: List[Task]) -> str:
-    """Build prompt dengan context yang lengkap"""
+    """Build a complete prompt with task context for the AI.
+
+    Args:
+        user_question: The user's question about tasks.
+        tasks: List of Task objects to include as context.
+
+    Returns:
+        str: Formatted prompt with statistics and task list.
+    """
     statistics = _get_task_statistics(tasks)
     task_list = _summarize_tasks(tasks)
-    
+
     return f"""Pertanyaan user: {user_question}
 
 {statistics}
@@ -111,7 +125,14 @@ Berikan jawaban yang relevan berdasarkan data di atas."""
 
 
 def _detect_intent(question: str) -> dict:
-    """Deteksi intent dari pertanyaan user untuk optimasi query"""
+    """Detect user intent from question for query optimization.
+
+    Args:
+        question: The user's question text.
+
+    Returns:
+        dict: Intent dictionary with filter_status, filter_deadline, search_keyword.
+    """
     question_lower = question.lower()
     
     intent = {
@@ -142,11 +163,21 @@ def _detect_intent(question: str) -> dict:
 
 
 async def ask_deepseek(question: str, tasks: List[Task]) -> str:
-    """Kirim pertanyaan ke DeepSeek API dengan context task"""
-    
-    # Jika tidak ada task sama sekali
+    """Send a question to DeepSeek API with task context.
+
+    Args:
+        question: The user's question.
+        tasks: List of tasks to provide as context.
+
+    Returns:
+        str: AI-generated response or error message.
+    """
+    # If no tasks exist at all
     if not tasks:
-        return "Saat ini tidak ada task yang tersedia di sistem. Silakan tambahkan task terlebih dahulu."
+        return (
+            "Saat ini tidak ada task yang tersedia di sistem. "
+            "Silakan tambahkan task terlebih dahulu."
+        )
     
     payload = {
         "model": "deepseek-chat",

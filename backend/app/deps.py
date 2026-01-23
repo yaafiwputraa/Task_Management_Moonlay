@@ -1,3 +1,9 @@
+"""FastAPI dependency injection utilities.
+
+This module provides common dependencies for authentication
+and authorization used across API endpoints.
+"""
+
 from typing import Optional
 
 from fastapi import Depends, HTTPException, status
@@ -16,6 +22,18 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 def get_current_user(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ) -> models.User:
+    """Extract and validate the current user from JWT token.
+
+    Args:
+        token: JWT access token from Authorization header.
+        db: Database session.
+
+    Returns:
+        models.User: The authenticated user instance.
+
+    Raises:
+        HTTPException: 401 Unauthorized if token is invalid or user not found.
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

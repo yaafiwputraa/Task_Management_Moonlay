@@ -1,3 +1,9 @@
+"""Authentication router for user login.
+
+This module provides the login endpoint for user authentication
+using OAuth2 password flow with JWT tokens.
+"""
+
 from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -15,7 +21,19 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
-):
+) -> dict:
+    """Authenticate user and return JWT access token.
+
+    Args:
+        form_data: OAuth2 form with username (email) and password.
+        db: Database session.
+
+    Returns:
+        dict: Access token and token type.
+
+    Raises:
+        HTTPException: 401 Unauthorized if credentials are invalid.
+    """
     user = (
         db.query(models.User)
         .filter(models.User.email == form_data.username)

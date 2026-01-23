@@ -1,9 +1,33 @@
+/**
+ * Form component for creating and editing tasks.
+ * Provides input fields for task title, description, status, deadline, and assignee.
+ * @module components/TaskForm
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
 
+/**
+ * Available task status options.
+ * @constant {string[]}
+ */
 const statuses = ["Todo", "In Progress", "Done"];
 
+/**
+ * Task form component for creating or editing tasks.
+ * @param {Object} props - Component properties
+ * @param {Function} props.onSubmit - Callback function when form is submitted
+ * @param {Function} props.onCancel - Callback function when form is cancelled
+ * @param {Object} [props.initial={}] - Initial values for editing existing task
+ * @param {string} [props.initial.title] - Initial task title
+ * @param {string} [props.initial.description] - Initial task description
+ * @param {string} [props.initial.status] - Initial task status
+ * @param {string} [props.initial.deadline] - Initial task deadline
+ * @param {number} [props.initial.assignee_id] - Initial assignee ID
+ * @param {Array} [props.initial.users] - List of available users for assignment
+ * @returns {JSX.Element} Task form with input fields
+ */
 export default function TaskForm({ onSubmit, onCancel, initial = {} }) {
   const [title, setTitle] = useState(initial.title || "");
   const [description, setDescription] = useState(initial.description || "");

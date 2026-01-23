@@ -1,3 +1,9 @@
+/**
+ * Main dashboard page with task management features.
+ * Displays task board, statistics, and provides CRUD operations for tasks.
+ * @module app/page
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,6 +13,11 @@ import TaskList from "../components/TaskList";
 import TaskForm from "../components/TaskForm";
 import ChatbotPanel from "../components/ChatbotPanel";
 
+/**
+ * Home page component that displays the main task management dashboard.
+ * Includes task board, task form, statistics, and chatbot panel.
+ * @returns {JSX.Element} Dashboard with task management interface
+ */
 export default function HomePage() {
   const router = useRouter();
   const [tasks, setTasks] = useState([]);
@@ -15,7 +26,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [filter, setFilter] = useState("all");
+  const [filterAssignee, setFilterAssignee] = useState("all");
+  const [deleteData, setDeleteData] = useState(null);
 
   useEffect(() => {
     const token = loadTokenFromStorage();
@@ -26,6 +38,11 @@ export default function HomePage() {
     }
   }, []);
 
+  /**
+   * Fetch all tasks and users from the API.
+   * Also extracts current user info from JWT token.
+   * @async
+   */
   const fetchAll = async () => {
     try {
       const [taskRes, userRes] = await Promise.all([
@@ -57,12 +74,22 @@ export default function HomePage() {
     }
   };
 
+  /**
+   * Handle creating a new task.
+   * @async
+   * @param {Object} data - Task data to create
+   */
   const handleCreate = async (data) => {
     await api.post("/tasks/", data);
     setShowForm(false);
     fetchAll();
   };
 
+  /**
+   * Handle updating an existing task.
+   * @async
+   * @param {Object} data - Updated task data
+   */
   const handleUpdate = async (data) => {
     await api.put(`/tasks/${editing.id}/`, data);
     setEditing(null);
@@ -70,21 +97,41 @@ export default function HomePage() {
     fetchAll();
   };
 
-  const handleDelete = async (id) => {
-    if (confirm("Apakah Anda yakin ingin menghapus task ini?")) {
-      await api.delete(`/tasks/${id}/`);
+  /**
+   * Handle deleting a task (opens confirmation modal).
+   * @param {number} id - Task ID to delete
+   */
+  const handleDelete = (id) => {
+    const task = tasks.find((t) => t.id === id);
+    if (task) {
+      setDeleteData(task);
+    }
+  };
+
+  /**
+   * Confirm and execute task deletion.
+   * @async
+   */
+  const confirmDelete = async () => {
+    if (deleteData) {
+      await api.delete(`/tasks/${deleteData.id}/`);
+      setDeleteData(null);
       fetchAll();
     }
   };
 
+  /**
+   * Handle user logout by clearing token and redirecting to login.
+   */
   const logout = () => {
     setAuthToken(null);
     router.push("/login");
   };
 
-  const filteredTasks = tasks.filter(task => {
-    if (filter === "all") return true;
-    return task.status === filter;
+  const filteredTasks = tasks.filter((task) => {
+    if (filterAssignee === "all") return true;
+    if (filterAssignee === "unassigned") return !task.assignee_id;
+    return task.assignee_id === Number(filterAssignee);
   });
 
   const taskStats = {
@@ -148,7 +195,6 @@ export default function HomePage() {
             </div>
             <div className="user-info-text">
               <span className="user-name">{currentUser?.name || "User"}</span>
-              <span className="user-role">Member</span>
             </div>
           </div>
           <div className="divider-v"></div>
@@ -224,31 +270,116 @@ export default function HomePage() {
         <div className="task-section">
           {/* Task Header */}
           <div className="section-header">
-            <div className="filter-tabs">
-              {["all", "Todo", "In Progress", "Done"].map((f) => (
-                <button
-                  key={f}
-                  className={`filter-tab ${filter === f ? "active" : ""}`}
-                  onClick={() => setFilter(f)}
-                >
-                  {f === "all" ? "Semua" : f}
-                  <span className="tab-count">
-                    {f === "all" ? tasks.length : tasks.filter(t => t.status === f).length}
-                  </span>
-                </button>
-              ))}
+            <div className="filter-controls">
+              <select
+                className="select-filter"
+                value={filterAssignee}
+                onChange={(e) => setFilterAssignee(e.target.value)}
+              >
+                <option value="all">Semua Assignee</option>
+                <option value="unassigned">Belum Ditugaskan</option>
+                {users.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <button
               className="btn btn-primary"
-              onClick={() => { setShowForm(true); setEditing(null); }}
+              onClick={() => {
+                setShowForm(true);
+                setEditing(null);
+              }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"/>
-                <line x1="5" y1="12" x2="19" y2="12"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
               Tambah Task
             </button>
           </div>
+
+          {/* Delete Confirmation Modal */}
+          {deleteData && (
+            <div className="modal-overlay" onClick={() => setDeleteData(null)}>
+              <div
+                className="modal animate-fade-in"
+                onClick={(e) => e.stopPropagation()}
+                style={{ maxWidth: "400px" }}
+              >
+                <div className="modal-header">
+                  <h2>Hapus Task</h2>
+                  <button
+                    className="modal-close"
+                    onClick={() => setDeleteData(null)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="modal-body" style={{ padding: "0 24px 24px" }}>
+                  <p style={{ margin: "0 0 8px" }}>
+                    Apakah Anda yakin ingin menghapus task{" "}
+                    <strong>"{deleteData.title}"</strong>?
+                  </p>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "var(--gray-500)",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Tindakan ini tidak dapat dibatalkan.
+                  </p>
+                </div>
+                <div
+                  className="modal-footer"
+                  style={{
+                    padding: "16px 24px",
+                    background: "var(--gray-50)",
+                    borderTop: "1px solid var(--gray-200)",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: "12px",
+                    borderRadius: "0 0 16px 16px",
+                  }}
+                >
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => setDeleteData(null)}
+                  >
+                    Batal
+                  </button>
+                  <button className="btn btn-danger" onClick={confirmDelete}>
+                    Hapus
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Task Form Modal */}
           {showForm && (
@@ -490,48 +621,58 @@ export default function HomePage() {
           gap: 16px;
         }
 
-        .filter-tabs {
-          display: flex;
-          gap: 4px;
-          background: var(--gray-100);
-          padding: 4px;
-          border-radius: 12px;
-        }
-
-        .filter-tab {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 16px;
-          font-size: 13px;
-          font-weight: 500;
-          color: var(--gray-600);
-          background: transparent;
-          border: none;
+        .select-filter {
+          padding: 10px 16px;
+          font-size: 14px;
+          color: var(--gray-700);
+          background: white;
+          border: 1px solid var(--gray-200);
           border-radius: 8px;
+          outline: none;
+          min-width: 200px;
           cursor: pointer;
           transition: all 0.2s ease;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
-        .filter-tab:hover {
-          color: var(--gray-900);
+        .select-filter:hover {
+          border-color: var(--gray-400);
         }
 
-        .filter-tab.active {
+        .select-filter:focus {
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-danger {
+          background: var(--danger);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 8px;
+          border: none;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .btn-danger:hover {
+          background: #dc2626;
+          box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-secondary {
           background: white;
-          color: var(--gray-900);
-          box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+          color: var(--gray-700);
+          border: 1px solid var(--gray-300);
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
         }
 
-        .tab-count {
-          padding: 2px 6px;
-          font-size: 11px;
-          background: rgba(0,0,0,0.05);
-          border-radius: 6px;
-        }
-
-        .filter-tab.active .tab-count {
-          background: var(--gray-100);
+        .btn-secondary:hover {
+          background: var(--gray-50);
         }
 
         .modal-overlay {

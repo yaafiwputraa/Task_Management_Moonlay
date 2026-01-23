@@ -1,8 +1,27 @@
+/**
+ * Kanban-style task board component with three columns.
+ * Displays tasks organized by status (Todo, In Progress, Done).
+ * @module components/TaskList
+ */
+
 "use client";
 
 import dayjs from "dayjs";
 
+/**
+ * Task list component that displays tasks in a Kanban board layout.
+ * @param {Object} props - Component properties
+ * @param {Array<Object>} props.tasks - Array of task objects
+ * @param {Function} props.onEdit - Callback function when editing a task
+ * @param {Function} props.onDelete - Callback function when deleting a task
+ * @returns {JSX.Element} Kanban board with task cards
+ */
 export default function TaskList({ tasks, onEdit, onDelete }) {
+  /**
+   * Check if a deadline has passed.
+   * @param {string|Date|null} deadline - Task deadline to check
+   * @returns {boolean} True if deadline has passed, false otherwise
+   */
   const isOverdue = (deadline) => {
     if (!deadline) return false;
     return dayjs(deadline).isBefore(dayjs());
@@ -17,8 +36,8 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
   return (
     <div className="task-board">
       {Object.entries(columns).map(([status, columnTasks]) => (
-        <div key={status} className="board-column">
-          <div className={`column-header ${status.toLowerCase().replace(" ", "-")}`}>
+        <div key={status} className={`board-column ${status.toLowerCase().replace(" ", "-")}`}>
+          <div className="column-header">
             <span className="column-title">{status}</span>
             <span className="column-count">{columnTasks.length}</span>
           </div>
@@ -105,6 +124,22 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
           min-height: 400px;
           display: flex;
           flex-direction: column;
+          border-top: 4px solid transparent;
+        }
+
+        .board-column.todo {
+            background: #f8fafc; /* Slate 50 */
+            border-top-color: #64748b;
+        }
+
+        .board-column.in-progress {
+            background: #eff6ff; /* Blue 50 */
+            border-top-color: #3b82f6;
+        }
+
+        .board-column.done {
+            background: #f0fdf4; /* Green 50 */
+            border-top-color: #22c55e;
         }
 
         .column-header {

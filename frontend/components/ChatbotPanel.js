@@ -1,9 +1,20 @@
+/**
+ * Floating chatbot panel component with AI-powered task assistance.
+ * Uses DeepSeek API to answer questions about tasks.
+ * @module components/ChatbotPanel
+ */
+
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import api from "../lib/api";
 
+/**
+ * Chatbot panel component that provides AI assistance for task management.
+ * Features a floating toggle button and expandable chat window.
+ * @returns {JSX.Element} Chatbot panel with toggle button and chat interface
+ */
 export default function ChatbotPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const [question, setQuestion] = useState("");
@@ -11,6 +22,9 @@ export default function ChatbotPanel() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
+  /**
+   * Scroll chat messages to the bottom.
+   */
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -21,6 +35,10 @@ export default function ChatbotPanel() {
     }
   }, [messages, isOpen]);
 
+  /**
+   * Send a question to the AI chatbot and update message history.
+   * @async
+   */
   const ask = async () => {
     if (!question.trim()) return;
     
@@ -42,6 +60,11 @@ export default function ChatbotPanel() {
     }
   };
 
+  /**
+   * Handle keyboard events in the chat input.
+   * Sends message on Enter key press (without Shift).
+   * @param {KeyboardEvent} e - Keyboard event
+   */
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();

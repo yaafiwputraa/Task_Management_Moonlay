@@ -218,6 +218,8 @@ Lihat file **`docs/postman_collection.json`** untuk dokumentasi lengkap.
 
 Lihat file **`docs/erd.md`** atau diagram berikut:
 
+![ERD Diagram](docs/erd-diagram.png)
+
 **Tabel Users:**
 - `id` (PK, Integer)
 - `email` (String, Unique)

@@ -1,9 +1,20 @@
+/**
+ * Login page component with email/password authentication.
+ * Uses OAuth2 password flow with JWT tokens.
+ * @module app/login
+ */
+
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api, { setAuthToken } from "../../lib/api";
 
+/**
+ * Login page component that handles user authentication.
+ * Stores JWT token in localStorage and redirects to home page on success.
+ * @returns {JSX.Element} Login form with email and password inputs
+ */
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("admin@example.com");
@@ -11,6 +22,12 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Handle login form submission.
+   * Sends credentials to backend and stores JWT token on success.
+   * @async
+   * @param {Event} e - Form submit event
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

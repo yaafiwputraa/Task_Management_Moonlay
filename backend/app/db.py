@@ -1,5 +1,13 @@
+"""Database session and base declaration.
+
+This module provides SQLAlchemy engine configuration, session factory,
+and the declarative base for ORM models.
+"""
+
+from typing import Generator
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
 from .config import settings
 
@@ -11,26 +19,15 @@ SessionLocal = sessionmaker(
 Base = declarative_base()
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-"""Database session and base declaration."""
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+def get_db() -> Generator[Session, None, None]:
+    """Provide a transactional database session.
 
-from app.core.config import get_settings
+    Yields:
+        Session: SQLAlchemy database session.
 
-settings = get_settings()
-
-engine = create_engine(settings.database_url, future=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, future=True)
-Base = declarative_base()
-
-
-def get_db():
+    Note:
+        The session is automatically closed after the request completes.
+    """
     db = SessionLocal()
     try:
         yield db
