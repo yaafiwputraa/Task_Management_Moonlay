@@ -19,6 +19,7 @@ class Settings(BaseSettings):
         jwt_secret: Secret key for JWT token signing.
         jwt_algorithm: Algorithm for JWT encoding (default: HS256).
         jwt_expire_minutes: Token expiration time in minutes.
+        cors_origins: Comma-separated list of allowed CORS origins.
         deepseek_api_key: API key for DeepSeek AI service.
         deepseek_api_url: DeepSeek API endpoint URL.
     """
@@ -33,6 +34,12 @@ class Settings(BaseSettings):
     jwt_algorithm: str = Field(default="HS256", env="JWT_ALGORITHM")
     jwt_expire_minutes: int = Field(default=60, env="JWT_EXPIRE_MINUTES")
 
+    # CORS configuration - comma-separated list of allowed origins
+    cors_origins: str = Field(
+        default="http://localhost:3000,http://127.0.0.1:3000",
+        env="CORS_ORIGINS",
+    )
+
     deepseek_api_key: str = Field(..., env="DEEPSEEK_API_KEY")
     deepseek_api_url: str = Field(
         default="https://api.deepseek.com/chat/completions", env="DEEPSEEK_API_URL"
@@ -42,6 +49,14 @@ class Settings(BaseSettings):
         "env_file": ".env",
         "env_file_encoding": "utf-8",
     }
+
+    def get_cors_origins(self) -> list[str]:
+        """Parse CORS origins from comma-separated string.
+
+        Returns:
+            list[str]: List of allowed origin URLs.
+        """
+        return [origin.strip() for origin in self.cors_origins.split(",")]
 
 
 settings = Settings()

@@ -19,17 +19,27 @@ def create_app() -> FastAPI:
         FastAPI: Configured FastAPI application instance.
 
     Note:
-        - CORS is enabled for all origins (development mode).
+        - CORS origins are configured from environment variables.
         - Includes auth, users, tasks, and chat routers.
     """
     app = FastAPI(title="Task Management API", debug=settings.app_debug)
 
+    # Get allowed origins from settings
+    allowed_origins = settings.get_cors_origins()
+
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=allowed_origins,
         allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=[
+            "Content-Type",
+            "Authorization",
+            "Accept",
+            "Origin",
+            "User-Agent",
+        ],
+        max_age=600,  # Cache preflight requests for 10 minutes
     )
 
     app.include_router(auth.router)
