@@ -60,12 +60,7 @@ export default function LoginPage() {
       <div className="login-card animate-fade-in">
         <div className="login-header">
           <div className="login-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="14" y="14" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
+            <img src="/app.png" alt="Logo" width="48" height="48" />
           </div>
           <h1>Task Management</h1>
           <p>Masuk ke akun Anda untuk melanjutkan</p>
@@ -162,12 +157,17 @@ export default function LoginPage() {
           width: 56px;
           height: 56px;
           margin: 0 auto 20px;
-          color: white; /* primary blue */
-          background: var(--primary); /* blue-50 */
-          border-radius: 14px;
           display: flex;
           align-items: center;
           justify-content: center;
+          filter: drop-shadow(0 0 20px rgba(249, 115, 22, 0.4))
+                  drop-shadow(0 0 40px rgba(249, 115, 22, 0.2));
+        }
+        
+        .login-icon img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
         }
 
         .login-header h1 {

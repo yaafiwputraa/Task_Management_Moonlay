@@ -80,9 +80,14 @@ export default function HomePage() {
    * @param {Object} data - Task data to create
    */
   const handleCreate = async (data) => {
-    await api.post("/tasks/", data);
-    setShowForm(false);
-    fetchAll();
+    try {
+      await api.post("/tasks/", data);
+      setShowForm(false);
+      fetchAll();
+    } catch (err) {
+      alert(err.response?.data?.detail || "Gagal membuat task. Silakan coba lagi.");
+      throw err;
+    }
   };
 
   /**
@@ -91,10 +96,15 @@ export default function HomePage() {
    * @param {Object} data - Updated task data
    */
   const handleUpdate = async (data) => {
-    await api.put(`/tasks/${editing.id}/`, data);
-    setEditing(null);
-    setShowForm(false);
-    fetchAll();
+    try {
+      await api.put(`/tasks/${editing.id}/`, data);
+      setEditing(null);
+      setShowForm(false);
+      fetchAll();
+    } catch (err) {
+      alert(err.response?.data?.detail || "Gagal mengupdate task. Silakan coba lagi.");
+      throw err;
+    }
   };
 
   /**
@@ -114,9 +124,13 @@ export default function HomePage() {
    */
   const confirmDelete = async () => {
     if (deleteData) {
-      await api.delete(`/tasks/${deleteData.id}/`);
-      setDeleteData(null);
-      fetchAll();
+      try {
+        await api.delete(`/tasks/${deleteData.id}/`);
+        setDeleteData(null);
+        fetchAll();
+      } catch (err) {
+        alert(err.response?.data?.detail || "Gagal menghapus task. Silakan coba lagi.");
+      }
     }
   };
 
@@ -178,12 +192,7 @@ export default function HomePage() {
       <aside className="sidebar">
         <div className="sidebar-header">
           <div className="logo-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="14" y="14" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
+            <img src="/app.png" alt="Logo" width="32" height="32" />
           </div>
           <h1>Task Management</h1>
         </div>
@@ -402,13 +411,17 @@ export default function HomePage() {
         .logo-icon {
           width: 36px;
           height: 36px;
-          background: var(--primary);
-          color: white;
-          border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2);
+          filter: drop-shadow(0 0 20px rgba(249, 115, 22, 0.4))
+                  drop-shadow(0 0 40px rgba(249, 115, 22, 0.2));
+        }
+        
+        .logo-icon img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
         }
 
         .sidebar-header h1 {

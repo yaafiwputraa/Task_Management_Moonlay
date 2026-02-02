@@ -38,6 +38,7 @@ export default function TaskForm({ onSubmit, onCancel, initial = {} }) {
   const [assigneeId, setAssigneeId] = useState(initial.assignee_id || "");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (initial.users) {
@@ -48,6 +49,7 @@ export default function TaskForm({ onSubmit, onCancel, initial = {} }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
     try {
       await onSubmit({
         title,
@@ -56,6 +58,8 @@ export default function TaskForm({ onSubmit, onCancel, initial = {} }) {
         deadline: deadline ? new Date(deadline).toISOString() : null,
         assignee_id: assigneeId ? Number(assigneeId) : null,
       });
+    } catch (err) {
+      setError(err.response?.data?.detail || "Gagal menyimpan task. Silakan coba lagi.");
     } finally {
       setLoading(false);
     }
@@ -164,6 +168,17 @@ export default function TaskForm({ onSubmit, onCancel, initial = {} }) {
         </div>
       </div>
 
+      {error && (
+        <div className="error-message">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {error}
+        </div>
+      )}
+
       <div className="form-footer">
         <button type="button" className="btn btn-secondary" onClick={onCancel}>
           Batal
@@ -223,6 +238,24 @@ export default function TaskForm({ onSubmit, onCancel, initial = {} }) {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 16px;
+        }
+
+        .error-message {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 24px;
+          margin: 0 24px;
+          background: rgba(239, 68, 68, 0.1);
+          border: 1px solid var(--danger);
+          border-radius: 8px;
+          color: var(--danger);
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        .error-message svg {
+          flex-shrink: 0;
         }
 
         .form-footer {

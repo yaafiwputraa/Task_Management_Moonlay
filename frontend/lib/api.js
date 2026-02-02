@@ -39,6 +39,24 @@ api.interceptors.request.use(
 );
 
 /**
+ * Response interceptor that handles global error responses.
+ * Automatically redirects to login on 401 Unauthorized.
+ */
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle 401 Unauthorized - token expired or invalid
+    if (error.response?.status === 401) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("access_token");
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+/**
  * Set or remove the authentication token in localStorage.
  * @param {string|null} token - JWT token to store, or null to remove.
  */

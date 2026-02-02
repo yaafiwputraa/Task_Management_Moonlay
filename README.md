@@ -10,7 +10,7 @@ Aplikasi Task Management sederhana berbasis web yang memungkinkan pengelolaan tu
 - 🔄 **Status Management**: Todo, In Progress, Done
 - 📅 **Deadline Tracking**: Set dan monitor deadline task
 - 🤖 **AI Chatbot**: Tanya jawab seputar data task menggunakan LLM
-- 📊 **Kanban Board Layout**: Tampilan ala Jira untuk visualisasi task
+- 📊 **Kanban Board Layout**: Tampilan visualisasi task
 
 ## 🛠 Tech Stack
 
